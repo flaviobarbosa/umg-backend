@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: umg-backend
+
+#spotify:
+#  clientId:
+#  clientSecret:
