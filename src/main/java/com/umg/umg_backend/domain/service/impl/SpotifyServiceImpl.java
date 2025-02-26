@@ -1,7 +1,10 @@
 package com.umg.umg_backend.domain.service.impl;
 
 import com.umg.umg_backend.core.SpotifyProperties;
+import com.umg.umg_backend.domain.model.Item;
 import com.umg.umg_backend.domain.model.SpotifyAccessToken;
+import com.umg.umg_backend.domain.model.SpotifyMetadata;
+import com.umg.umg_backend.domain.model.SpotifyTrackResponse;
 import com.umg.umg_backend.domain.service.SpotifyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -19,8 +22,6 @@ public class SpotifyServiceImpl implements SpotifyService {
   private static final String CLIENT_ID = "client_id";
   private static final String CLIENT_SECRET = "client_secret";
   private static final String CLIENT_CREDENTIALS = "client_credentials";
-
-
 
   @Autowired
   private SpotifyProperties spotifyProperties;
@@ -43,5 +44,41 @@ public class SpotifyServiceImpl implements SpotifyService {
         .toEntity(SpotifyAccessToken.class);
 
     return response.getBody();
+  }
+
+  @Override
+  public SpotifyMetadata getMetadata(String isrc) {
+    SpotifyAccessToken accessToken = getAccessToken();
+    String authorizationHeader = accessToken.getTokenType() + " " + accessToken.getAccessToken();
+
+    String baseUrl = "https://api.spotify.com/v1/search?q=isrc%" + isrc + "&type=track";
+
+    //TODO create a bean
+    RestClient client =
+        RestClient.builder().baseUrl(baseUrl).build();
+
+    ResponseEntity<SpotifyTrackResponse> response = client.get()
+        .header(HttpHeaders.AUTHORIZATION, authorizationHeader)
+        .retrieve()
+        .toEntity(SpotifyTrackResponse.class);
+
+    return extractData(response.getBody());
+  }
+
+  private SpotifyMetadata extractData(SpotifyTrackResponse response) {
+    if(response == null) {
+      return null;
+    }
+
+    Item item = response.getTracks().getItems().get(0);
+
+    return SpotifyMetadata.builder()
+        .name(item.getName())
+        .artistName(item.getArtists().get(0).getName())
+        .albumName(item.getAlbum().getName())
+        .albumId(item.getId())
+        .isExplicit(item.isExplicit())
+        .playbackSeconds(Long.valueOf(item.getDuration_ms()))
+        .build();
   }
 }
