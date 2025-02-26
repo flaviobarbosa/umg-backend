@@ -1,7 +1,9 @@
 package com.umg.umg_backend.domain.service;
 
+import com.umg.umg_backend.domain.model.SpotifyMetadata;
+
 public interface TrackService {
 
-  void createTrack(String isrc);
+  SpotifyMetadata createTrack(String isrc);
 
 }

@@ -1,5 +1,6 @@
 package com.umg.umg_backend.api;
 
+import com.umg.umg_backend.domain.model.SpotifyMetadata;
 import com.umg.umg_backend.domain.service.TrackService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,8 +19,8 @@ public class TrackController {
 
   @PostMapping("/createTrack")
   @ResponseStatus(HttpStatus.CREATED)
-  public void createTrack(@RequestParam String isrc) {
-    trackService.createTrack(isrc);
+  public SpotifyMetadata createTrack(@RequestParam String isrc) {
+    return trackService.createTrack(isrc);
   }
 
 
