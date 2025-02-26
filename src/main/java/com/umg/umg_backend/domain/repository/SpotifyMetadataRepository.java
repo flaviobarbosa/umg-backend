@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SpotifyMetadataRepository extends JpaRepository<SpotifyMetadata, Integer> {
+  Optional<SpotifyMetadata> findByIsrc(String isrc);
 }
