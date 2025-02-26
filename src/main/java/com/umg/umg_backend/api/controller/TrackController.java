@@ -1,5 +1,7 @@
-package com.umg.umg_backend.api;
+package com.umg.umg_backend.api.controller;
 
+import com.umg.umg_backend.api.mapper.SpotifyMetadataMapper;
+import com.umg.umg_backend.api.model.SpotifyMetadataDto;
 import com.umg.umg_backend.domain.model.SpotifyMetadata;
 import com.umg.umg_backend.domain.service.TrackService;
 import java.io.File;
@@ -25,15 +27,20 @@ public class TrackController {
   @Autowired
   private TrackService trackService;
 
+  @Autowired
+  private SpotifyMetadataMapper mapper;
+
   @PostMapping("/createTrack")
   @ResponseStatus(HttpStatus.CREATED)
-  public SpotifyMetadata createTrack(@RequestParam String isrc) {
-    return trackService.createTrack(isrc);
+  public SpotifyMetadataDto createTrack(@RequestParam String isrc) {
+    SpotifyMetadata spotifyMetadata = trackService.createTrack(isrc);
+    return mapper.toDto(spotifyMetadata);
   }
 
   @GetMapping("/getTrackMetadata/{isrc}")
-  public SpotifyMetadata getTrackMetadata(@PathVariable String isrc)  {
-    return trackService.getTrackMetadata(isrc);
+  public SpotifyMetadataDto getTrackMetadata(@PathVariable String isrc)  {
+    SpotifyMetadata spotifyMetadata = trackService.getTrackMetadata(isrc);
+    return mapper.toDto(spotifyMetadata);
   }
 
   @GetMapping("/cover/{isrc}")
