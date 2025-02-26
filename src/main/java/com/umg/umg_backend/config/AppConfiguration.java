@@ -13,10 +13,10 @@ public class AppConfiguration {
     return RestClient.builder().baseUrl("https://accounts.spotify.com/api/token").build();
   }
 
-  @Bean(name = "searchRestClient")
+  @Bean(name = "apiRestClient")
   @Primary
-  public RestClient searchRestClient() {
-    return RestClient.builder().baseUrl("https://api.spotify.com/v1/search").build();
+  public RestClient apiRestClient() {
+    return RestClient.builder().baseUrl("https://api.spotify.com/v1").build();
   }
 
 }

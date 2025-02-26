@@ -1,5 +1,7 @@
 package com.umg.umg_backend.domain.service.impl;
 
+import static com.umg.umg_backend.util.CoverUtil.COVER_PATH;
+import static com.umg.umg_backend.util.CoverUtil.getNameAndExtension;
 import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
@@ -7,9 +9,12 @@ import com.umg.umg_backend.domain.model.SpotifyMetadata;
 import com.umg.umg_backend.domain.repository.SpotifyMetadataRepository;
 import com.umg.umg_backend.domain.service.SpotifyService;
 import com.umg.umg_backend.domain.service.TrackService;
+import java.io.File;
+import java.nio.file.Files;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
@@ -22,6 +27,7 @@ public class TrackServiceImpl implements TrackService {
   private SpotifyMetadataRepository repository;
 
   @Override
+  @Transactional
   public SpotifyMetadata createTrack(String isrc) {
     Optional<SpotifyMetadata> byIsrc = repository.findByIsrc(isrc);
 
@@ -32,14 +38,24 @@ public class TrackServiceImpl implements TrackService {
     SpotifyMetadata metadata = spotifyService.getMetadata(isrc);
     metadata.setIsrc(isrc);
 
-    //TODO get cover
+    spotifyService.downloadCover(metadata);
 
     return repository.save(metadata);
-
   }
 
   @Override
   public SpotifyMetadata getTrackMetadata(String isrc) {
     return repository.findByIsrc(isrc).orElseThrow(() -> new ResponseStatusException(NOT_FOUND));
+  }
+
+  @Override
+  public File getCover(String isrc) {
+      File coverFile = new File(COVER_PATH.toString(), getNameAndExtension(isrc));
+
+      if(!Files.exists(coverFile.toPath())) {
+        throw new ResponseStatusException(NOT_FOUND);
+      }
+
+      return coverFile;
   }
 }
