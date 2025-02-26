@@ -1,0 +1,17 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: umg_user
+      POSTGRES_PASSWORD: umg_pw
+      POSTGRES_DB: umg
+    ports:
+      - '5432:5432'
+    volumes:
+      - umg_pg_data:/var/lib/postgresql/data
+
+volumes:
+  umg_pg_data:
