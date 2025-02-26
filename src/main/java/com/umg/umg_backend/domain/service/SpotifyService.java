@@ -5,7 +5,5 @@ import com.umg.umg_backend.domain.model.SpotifyMetadata;
 
 public interface SpotifyService {
 
-  SpotifyAccessToken getAccessToken();
-
   SpotifyMetadata getMetadata(String isrc);
 }

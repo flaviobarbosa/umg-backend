@@ -2,14 +2,21 @@ package com.umg.umg_backend.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.web.client.RestClient;
 
 @Configuration
 public class AppConfiguration {
 
-  @Bean
-  public RestClient restClient() {
+  @Bean(name = "tokenRestClient")
+  public RestClient tokenRestClient() {
     return RestClient.builder().baseUrl("https://accounts.spotify.com/api/token").build();
+  }
+
+  @Bean(name = "searchRestClient")
+  @Primary
+  public RestClient searchRestClient() {
+    return RestClient.builder().baseUrl("https://api.spotify.com/v1/search").build();
   }
 
 }
