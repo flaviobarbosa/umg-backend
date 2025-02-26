@@ -3,7 +3,10 @@ package com.umg.umg_backend.api;
 import com.umg.umg_backend.domain.model.SpotifyMetadata;
 import com.umg.umg_backend.domain.service.TrackService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,6 +24,11 @@ public class TrackController {
   @ResponseStatus(HttpStatus.CREATED)
   public SpotifyMetadata createTrack(@RequestParam String isrc) {
     return trackService.createTrack(isrc);
+  }
+
+  @GetMapping("/getTrackMetadata/{isrc}")
+  public SpotifyMetadata getTrackMetadata(@PathVariable String isrc)  {
+    return trackService.getTrackMetadata(isrc);
   }
 
 

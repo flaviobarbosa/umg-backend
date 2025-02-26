@@ -1,12 +1,14 @@
 package com.umg.umg_backend.domain.service.impl;
 
+import static org.springframework.http.HttpStatus.CONFLICT;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+
 import com.umg.umg_backend.domain.model.SpotifyMetadata;
 import com.umg.umg_backend.domain.repository.SpotifyMetadataRepository;
 import com.umg.umg_backend.domain.service.SpotifyService;
 import com.umg.umg_backend.domain.service.TrackService;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -24,13 +26,20 @@ public class TrackServiceImpl implements TrackService {
     Optional<SpotifyMetadata> byIsrc = repository.findByIsrc(isrc);
 
     if(byIsrc.isPresent()) {
-      throw new ResponseStatusException(HttpStatus.CONFLICT, "ISRC already saved");
+      throw new ResponseStatusException(CONFLICT, "ISRC already saved");
     }
 
     SpotifyMetadata metadata = spotifyService.getMetadata(isrc);
     metadata.setIsrc(isrc);
 
+    //TODO get cover
+
     return repository.save(metadata);
 
+  }
+
+  @Override
+  public SpotifyMetadata getTrackMetadata(String isrc) {
+    return repository.findByIsrc(isrc).orElseThrow(() -> new ResponseStatusException(NOT_FOUND));
   }
 }
