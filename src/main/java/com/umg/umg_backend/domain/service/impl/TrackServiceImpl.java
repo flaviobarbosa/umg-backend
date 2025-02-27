@@ -2,6 +2,7 @@ package com.umg.umg_backend.domain.service.impl;
 
 import static com.umg.umg_backend.util.CoverUtil.COVER_PATH;
 import static com.umg.umg_backend.util.CoverUtil.getNameAndExtension;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
@@ -13,6 +14,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.Optional;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +32,10 @@ public class TrackServiceImpl implements TrackService {
   @Override
   @Transactional
   public SpotifyMetadata createTrack(String isrc) {
+    if(StringUtils.isEmpty(isrc)) {
+      throw new ResponseStatusException(BAD_REQUEST, "ISRC is required");
+    }
+
     Optional<SpotifyMetadata> byIsrc = repository.findByIsrc(isrc);
 
     if(byIsrc.isPresent()) {
