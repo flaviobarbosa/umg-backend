@@ -7,6 +7,8 @@ import com.umg.umg_backend.domain.service.TrackService;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -37,6 +39,12 @@ public class TrackController {
   public SpotifyMetadataDto createTrack(@RequestParam String isrc) {
     SpotifyMetadata spotifyMetadata = trackService.createTrack(isrc);
     return mapper.toDto(spotifyMetadata);
+  }
+
+  @GetMapping("/getAllTrackMetadata")
+  public List<SpotifyMetadataDto> getAllTracksMetadata() {
+    List<SpotifyMetadata> tracksMetadata = trackService.getAllTracksMetadata();
+    return tracksMetadata.stream().map(track -> mapper.toDto(track)).collect(Collectors.toList());
   }
 
   @GetMapping("/getTrackMetadata/{isrc}")

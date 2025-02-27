@@ -11,6 +11,7 @@ import com.umg.umg_backend.domain.service.SpotifyService;
 import com.umg.umg_backend.domain.service.TrackService;
 import java.io.File;
 import java.nio.file.Files;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -57,5 +58,10 @@ public class TrackServiceImpl implements TrackService {
       }
 
       return coverFile;
+  }
+
+  @Override
+  public List<SpotifyMetadata> getAllTracksMetadata() {
+    return repository.findAll();
   }
 }
