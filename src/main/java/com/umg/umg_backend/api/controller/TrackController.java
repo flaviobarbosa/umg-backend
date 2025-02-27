@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/codechallenge")
 public class TrackController {
@@ -49,10 +51,9 @@ public class TrackController {
     File coverFile = trackService.getCover(isrc);
 
     return ResponseEntity.ok()
-        .header("Content-Disposition", "attachment; filename=" + coverFile.getName())
+        .header("Content-Disposition", "inline; filename=" + coverFile.getName())
         .contentType(MediaType.valueOf(MediaType.IMAGE_JPEG_VALUE))
         .body(Files.readAllBytes(coverFile.toPath()));
-
   }
 
 }
