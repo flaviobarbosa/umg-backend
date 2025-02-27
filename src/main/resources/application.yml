@@ -18,6 +18,10 @@ server:
   error:
     include-stacktrace: NEVER
 
+springdoc:
+  api-docs:
+    path: /api-docs
+
 #spotify:
 #  clientId:
 #  clientSecret:
