@@ -12,6 +12,25 @@ services:
       - '5432:5432'
     volumes:
       - umg_pg_data:/var/lib/postgresql/data
+    networks:
+      - umg_network
+  web:
+    build: .
+    ports:
+      - '8080:8080'
+    depends_on:
+      db:
+        condition: service_started
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/umg
+      SPOTIFY_CLIENTID: ${SPOTIFY_CLIENTID}
+      SPOTIFY_CLIENTSECRET: ${SPOTIFY_CLIENTESECRET}
+    networks:
+      - umg_network
 
 volumes:
   umg_pg_data:
+
+networks:
+  umg_network:
+    driver: bridge
